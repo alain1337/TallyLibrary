@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Tally;
@@ -24,10 +23,11 @@ namespace FileSizes
             var backupTodo = new TodoDoneTally<FileInfo>(fi => !fi.Attributes.HasFlag(FileAttributes.Archive), "Backup Status");
             var backupCounts = backupTodo.CreateCount();
 
-            Do(new [] { sizeCounts, extCounts, backupCounts }, args[0]);
+            Do(new[] { sizeCounts, extCounts, backupCounts }, args[0]);
             Render(sizeCounts);
             Render(extCounts, 10);
             RenderCompletion(backupCounts);
+
             return 0;
         }
 
