@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tally", "Tally\Tally.csproj", "{81705738-F27C-4153-B095-D3CC7C1B36DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{A11873C0-9BB0-43A0-8612-37338FAF37E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{A11873C0-9BB0-43A0-8612-37338FAF37E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileSizes", "FileSizes\FileSizes.csproj", "{D4C65E31-4331-49F0-BF85-1F97337CA5E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{A11873C0-9BB0-43A0-8612-37338FAF37E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A11873C0-9BB0-43A0-8612-37338FAF37E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A11873C0-9BB0-43A0-8612-37338FAF37E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4C65E31-4331-49F0-BF85-1F97337CA5E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4C65E31-4331-49F0-BF85-1F97337CA5E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4C65E31-4331-49F0-BF85-1F97337CA5E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4C65E31-4331-49F0-BF85-1F97337CA5E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

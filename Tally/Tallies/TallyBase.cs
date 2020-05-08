@@ -5,14 +5,15 @@ namespace Tally.Tallies
 {
     public abstract class TallyBase<T>
     {
-        protected Func<T, int> BinSelector;
-        public TallyDefinition Definition { get; protected set; }
+        public TallyDefinition<T> Definition { get; protected set; }
 
-        public TallyCount Tally(IEnumerable<T> items)
+        public TallyCount<T> Tally(IEnumerable<T> items)
         {
-            var c = new TallyCount(Definition);
-            c.Tally<T>(items, BinSelector);
+            var c = new TallyCount<T>(Definition);
+            c.Tally(items);
             return c;
         }
+
+        public TallyCount<T> CreateCount() => new TallyCount<T>(Definition);
     }
 }

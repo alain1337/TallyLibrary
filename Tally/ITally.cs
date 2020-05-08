@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Tally
 {
-    public interface ITally<in T>
+    public interface ITally<T>
     {
-        public TallyDefinition Definition { get; }
-        TallyCount Tally(IEnumerable<T> items);
+        public TallyDefinition<T> Definition { get; }
+        TallyCount<T> Tally(IEnumerable<T> items);
     }
 }

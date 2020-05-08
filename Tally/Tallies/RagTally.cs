@@ -8,14 +8,12 @@ namespace Tally.Tallies
     {
         public RagTally(Func<T, RagTallyBins> binSelector, string caption = null)
         {
-            Definition = new TallyDefinition(caption ?? "RAG", new[]
+            Definition = new TallyDefinition<T>(caption ?? "RAG", new[]
             {
-                new TallyBin("Red", true, false),
-                new TallyBin("Amber", true, false),
-                new TallyBin("Green", true, false)
-            });
-
-            BinSelector = item => (int)binSelector(item);
+                new TallyBin("Red"),
+                new TallyBin("Amber"),
+                new TallyBin("Green")
+            }, item => (int)binSelector(item));
         }
     }
 
