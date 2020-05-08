@@ -3,9 +3,9 @@ using System.Text;
 
 namespace Tally.Tallies
 {
-    public class Tally<T> : TallyBase<T>, ITally<T>
+    public class TodoDoneTally<T> : TallyBase<T>, ITally<T>
     {
-        public Tally(Func<T,bool> isDoneFunc, string caption = null)
+        public TodoDoneTally(Func<T,bool> isDoneFunc, string caption = null)
         {
             Definition = new TallyDefinition(caption ?? "TodoDone", new[]
             {

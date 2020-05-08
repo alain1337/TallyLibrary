@@ -10,7 +10,7 @@ namespace UnitTests
         [TestMethod]
         public void Basics()
         {
-            var tally = new Tally<int>(i => i % 2 == 0);
+            var tally = new TodoDoneTally<int>(i => i % 2 == 0);
             const int count = 1_000;
             var counts = tally.Tally(Enumerable.Range(0, 1000));
             Assert.AreEqual(count, counts.Count);
