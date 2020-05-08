@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.VisualBasic.CompilerServices;
 
@@ -8,15 +9,21 @@ namespace Tally
 {
     public class TallyCount<T>
     {
-        public TallyDefinition<T> Definition { get; private set; }
-        public int[] Counts { get; private set; }
+        public TallyDefinition<T> Definition { get; }
+        public string Caption => Definition.Caption;
+        public int[] Counts;
         public int Count => Counts.Sum();
         public double[] Percentages => Counts.Select(c => Count > 0 ? (double)c / Count : 0.0).ToArray();
 
         public void Tally(IEnumerable<T> items)
         {
             foreach (var item in items)
-                Counts[Definition.BinSelector(item)]++;
+            {
+                var i = Definition.BinSelector(item);
+                if (Counts.Length != Definition.Bins.Length)
+                    Array.Resize(ref Counts, Definition.Bins.Length);
+                Counts[i]++;
+            }
         }
 
         public static TallyCount<T> operator +(TallyCount<T> c1, TallyCount<T> c2)
@@ -42,6 +49,16 @@ namespace Tally
         {
             Definition = definition;
             Counts = counts.ToArray();
+        }
+    }
+
+    public static class TallyCountExtensions
+    {
+        public static void Tally<T>(this IEnumerable<TallyCount<T>> tallies, IEnumerable<T> items)
+        {
+            items = items.ToArray();
+            foreach (var tally in tallies)
+                tally.Tally(items);
         }
     }
 }

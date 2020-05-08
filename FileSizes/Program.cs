@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Tally;
@@ -15,18 +16,23 @@ namespace FileSizes
                 return 9;
             }
 
-            var tally = new FilesizeTally();
-            var counts = tally.CreateCount();
-            Do(counts, args[0]);
-            Render(counts);
+            var sizes = new FilesizeTally();
+            var sizeCounts = sizes.CreateCount();
+            var extensions = new ExtensionTally();
+            var extCounts = extensions.CreateCount();
+            Do(new[] { sizeCounts, extCounts }, args[0]);
+            Render(sizeCounts);
+            Render(extCounts, 20);
             return 0;
         }
 
-        static void Render<T>(TallyCount<T> tally)
+        static void Render<T>(TallyCount<T> tally, int? top = null)
         {
             Console.WriteLine(tally.Definition.Caption);
-            for (int i = 0; i < tally.Definition.Bins.Length; i++)
+            Console.WriteLine();
+            for (var i = 0; i < tally.Definition.Bins.Length; i++)
                 Console.WriteLine($"\t{tally.Definition.Bins[i].Caption,-10} {tally.Counts[i],5} [{PercentBar(tally.Percentages[i])}]");
+            Console.WriteLine($"\t{"TOTAL",-10} {tally.Count,5}");
             Console.WriteLine();
         }
 
@@ -36,11 +42,12 @@ namespace FileSizes
             return new string('#', c) + new string('_', 40 - c);
         }
 
-        static void Do(TallyCount<FileInfo> tally, string dir)
+        static void Do(TallyCount<FileInfo>[] tallies, string dir)
         {
-            tally.Tally(Directory.GetFiles(dir).Select(name => new FileInfo(name)));
+            var fis = Directory.GetFiles(dir).Select(name => new FileInfo(name));
+            tallies.Tally(fis);
             foreach (var subdir in Directory.GetDirectories(dir))
-                Do(tally, subdir);
+                Do(tallies, subdir);
         }
     }
 }

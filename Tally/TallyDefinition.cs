@@ -12,8 +12,15 @@ namespace Tally
             Caption = caption;
             BinSelector = binSelector;
         }
-        public TallyBin[] Bins { get; }
 
-        public Func<T, int> BinSelector { get; }
+        public int AddBin(TallyBin bin)
+        {
+            Array.Resize(ref Bins, (Bins?.Length ?? 0) + 1);
+            Bins[^1] = bin;
+            return Bins.Length - 1;
+        }
+
+        public TallyBin[] Bins;
+        public readonly Func<T, int> BinSelector;
     }
 }
