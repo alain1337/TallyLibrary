@@ -47,7 +47,7 @@ namespace FileSizes
             foreach (var i in indices)
                 Console.WriteLine($"\t{tally.Definition.Bins[i].Caption,-15} {tally.Counts[i],5} [{PercentBar(tally.Percentages[i])}]");
             if (others > 0)
-                Console.WriteLine($"\t{$"({tally.Count - top} other)",-15} {others,5} [{PercentBar((double)others / tally.Count)}]");
+                Console.WriteLine($"\t{$"({tally.Counts.Length - top} other)",-15} {others,5} [{PercentBar((double)others / tally.Count)}]");
             Console.WriteLine($"\t{"TOTAL",-15} {tally.Count,5}");
             Console.WriteLine();
         }
@@ -63,7 +63,7 @@ namespace FileSizes
             Console.WriteLine(count.Definition.Caption);
             Console.WriteLine();
             foreach (var line in BigLetters.Render($"{count.Percentages[^1]:P2}"))
-                Console.WriteLine(line);
+                Console.WriteLine("\t" + line);
             Console.WriteLine();
         }
 
