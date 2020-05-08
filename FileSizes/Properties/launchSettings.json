@@ -2,7 +2,7 @@
   "profiles": {
     "FileSizes": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\Users\\abart\\OneDrive\\Source\\Library\\"
+      "commandLineArgs": "."
     }
   }
 }

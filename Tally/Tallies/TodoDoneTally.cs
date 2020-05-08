@@ -10,7 +10,7 @@ namespace Tally.Tallies
             Definition = new TallyDefinition<T>(caption ?? "TodoDone", new[]
             {
                 new TallyBin("Todo"),
-                new TallyBin("Todo")
+                new TallyBin("Done")
             }, item => isDoneFunc(item) ? 1 : 0);
 
         }
