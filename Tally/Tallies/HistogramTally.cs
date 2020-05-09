@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Tally.Tallies
 {
-    public class HistogramTally<TItem, TValue> : TallyBase<TItem> where TValue : IComparable<TValue>
+    public class HistogramTally<TItem, TValue> : ITally<TItem> where TValue : IComparable<TValue>
     {
         public HistogramTally(IEnumerable<HistogramBin<TValue>> bins, Func<TItem, TValue> valueExtractor, string caption = null, TValue lowerBound = default(TValue), bool upperClip = false)
         {
@@ -16,12 +16,13 @@ namespace Tally.Tallies
             UpperClip = upperClip;
         }
 
+        public TallyDefinition Definition { get; }
         readonly Func<TItem, TValue> _valueExtractor;
         public HistogramBin<TValue>[] HistogramBins { get; }
         public TValue LowerBound { get; }
         public bool UpperClip { get; }
 
-        public override int BinSelector(TItem item)
+        public virtual int BinSelector(TItem item)
         {
             var value = _valueExtractor(item);
             if (value.CompareTo(LowerBound) < 0)

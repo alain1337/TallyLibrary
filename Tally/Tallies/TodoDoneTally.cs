@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Tally.Tallies
 {
-    public class TodoDoneTally<T> : TallyBase<T>, ITally<T>
+    public class TodoDoneTally<T> : ITally<T>
     {
         public TodoDoneTally(Func<T,bool> isDoneFunc, string caption = null)
         {
@@ -15,8 +15,9 @@ namespace Tally.Tallies
             _binSelector = isDoneFunc;
         }
 
+        public TallyDefinition Definition { get; }
         readonly Func<T, bool> _binSelector;
-        public override int BinSelector(T item)
+        public virtual int BinSelector(T item)
         {
             return _binSelector(item) ? 1 : 0;
         }

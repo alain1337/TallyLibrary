@@ -5,11 +5,11 @@ using Tally.Tallies;
 
 namespace FileSizes
 {
-    public class ExtensionTally : TallyBase<FileInfo>, ITally<FileInfo>
+    public class ExtensionTally : ValuesTally<FileInfo,string>
     {
-        public ExtensionTally()
+        public ExtensionTally(string caption = null) : base(null, caption ?? "Extensions")
         {
-            Definition = new TallyDefinition("Extensions", new[] { new TallyBin("(none)") });
+            Definition.AddBin(new TallyBin("(none)"));
         }
 
         public override int BinSelector(FileInfo fi)
