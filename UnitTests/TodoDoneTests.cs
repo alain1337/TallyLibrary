@@ -11,11 +11,11 @@ namespace UnitTests
         public void Basics()
         {
             var tally = new TodoDoneTally<int>(i => i % 2 == 0);
-            const int count = 1_000;
-            var counts = tally.Tally(Enumerable.Range(0, 1000));
-            Assert.AreEqual(count, counts.Count);
-            Assert.AreEqual(count / 2, counts.Counts[0]);
-            Assert.AreEqual(count / 2, counts.Counts[1]);
+            const int samples = 1_000;
+            var count = tally.CreateTally(Enumerable.Range(0, 1000));
+            Assert.AreEqual(samples, count.Count);
+            Assert.AreEqual(samples / 2, count.Counts[0]);
+            Assert.AreEqual(samples / 2, count.Counts[1]);
         }
     }
 }

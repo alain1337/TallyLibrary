@@ -9,10 +9,10 @@ namespace FileSizes
     {
         public ExtensionTally()
         {
-            Definition = new TallyDefinition<FileInfo>("Extensions", new[] { new TallyBin("(none)") }, BinSelector);
+            Definition = new TallyDefinition("Extensions", new[] { new TallyBin("(none)") });
         }
 
-        int BinSelector(FileInfo fi)
+        public override int BinSelector(FileInfo fi)
         {
             var ext = fi.Extension;
             if (String.IsNullOrEmpty(ext) || ext.Length > 10) 

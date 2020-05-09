@@ -24,13 +24,14 @@ namespace FileSizes
             var extCounts = extensions.CreateCount();
             var backupTodo = new TodoDoneTally<FileInfo>(fi => !fi.Attributes.HasFlag(FileAttributes.Archive), "Backup Status");
             var backupCounts = backupTodo.CreateCount();
+            var allTallies = new ITally<FileInfo>[] { sizes, extensions, backupTodo };
             var allCounts = new[] { sizeCounts, extCounts, backupCounts };
 
             var traverser = new DirectoryTraverser();
             traverser.OnFile += fi =>
             {
-                foreach (var c in allCounts)
-                    c.Tally(fi);
+                for (var i = 0; i < allTallies.Length; i++)
+                    allTallies[i].UpdateTally(allCounts[i], fi);
             };
             var tr = traverser.Traverse(args[0]);
             Console.WriteLine($"Scanned {tr.Directories} directories and {tr.Files} files in {tr.Elapsed} ({tr.Exceptions} exceptions)");
@@ -43,7 +44,7 @@ namespace FileSizes
             return 0;
         }
 
-        static void Render<T>(TallyCount<T> tally, int? top = null)
+        static void Render(TallyCount tally, int? top = null)
         {
             var bins = tally.GetBinInfos().ToList();
             int others = 0;
@@ -70,7 +71,7 @@ namespace FileSizes
             return new string('#', c) + new string('_', 40 - c);
         }
 
-        static void RenderCompletion<T>(TallyCount<T> count)
+        static void RenderCompletion(TallyCount count)
         {
             Console.WriteLine(count.Definition.Caption);
             Console.WriteLine();

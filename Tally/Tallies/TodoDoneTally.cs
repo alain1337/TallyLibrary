@@ -7,12 +7,18 @@ namespace Tally.Tallies
     {
         public TodoDoneTally(Func<T,bool> isDoneFunc, string caption = null)
         {
-            Definition = new TallyDefinition<T>(caption ?? "TodoDone", new[]
+            Definition = new TallyDefinition(caption ?? "TodoDone", new[]
             {
                 new TallyBin("Todo"),
                 new TallyBin("Done")
-            }, item => isDoneFunc(item) ? 1 : 0);
+            });
+            _binSelector = isDoneFunc;
+        }
 
+        readonly Func<T, bool> _binSelector;
+        public override int BinSelector(T item)
+        {
+            return _binSelector(item) ? 1 : 0;
         }
     }
 }

@@ -2,15 +2,15 @@
 
 namespace Tally
 {
-    public class TallyDefinition<T>
+    public class TallyDefinition
     {
         public string Caption { get; }
+        public TallyBin[] Bins;
 
-        public TallyDefinition(string caption, TallyBin[] bins, Func<T,int> binSelector)
+        public TallyDefinition(string caption, TallyBin[] bins)
         {
-            Bins = bins;
             Caption = caption;
-            BinSelector = binSelector;
+            Bins = bins;
         }
 
         public int AddBin(TallyBin bin)
@@ -20,7 +20,9 @@ namespace Tally
             return Bins.Length - 1;
         }
 
-        public TallyBin[] Bins;
-        public readonly Func<T, int> BinSelector;
+        public int FindBinIndex(string binCaption)
+        {
+            return Array.FindIndex(Bins, b => String.Equals(b.Caption, binCaption));
+        }
     }
 }

@@ -2,16 +2,23 @@
 
 namespace Tally.Tallies
 {
-    public class RagTally<T> : TallyBase<T>, ITally<T>
+    public class RagTally<T> : TallyBase<T>
     {
         public RagTally(Func<T, RagTallyBins> binSelector, string caption = null)
         {
-            Definition = new TallyDefinition<T>(caption ?? "RAG", new[]
+            Definition = new TallyDefinition(caption ?? "RAG", new[]
             {
                 new TallyBin("Red"),
                 new TallyBin("Amber"),
                 new TallyBin("Green")
-            }, item => (int)binSelector(item));
+            });
+            _binSelector = binSelector;
+        }
+
+        readonly Func<T, RagTallyBins> _binSelector;
+        public override int BinSelector(T item)
+        {
+            return (int)_binSelector(item);
         }
     }
 

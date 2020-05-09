@@ -12,7 +12,12 @@ namespace FileSizes
     {
         public FilesizeTally()
         {
-            Definition = new TallyDefinition<FileInfo>("Filesizes", Bins, item => SizeBin.GetBin(item.Length, Bins));
+            Definition = new TallyDefinition("Filesizes", Bins);
+        }
+
+        public override int BinSelector(FileInfo item)
+        {
+            return SizeBin.GetBin(item.Length, Bins);
         }
 
         static readonly SizeBin[] Bins =
