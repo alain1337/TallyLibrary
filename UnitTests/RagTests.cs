@@ -17,7 +17,7 @@ namespace UnitTests
             const int samples = 1_000_000;
             var rnd = new Random(1966);
             var count = tally.CreateTally(Enumerable.Range(0, samples).Select(i => rnd.NextDouble()));
-            Assert.AreEqual(count, count.Count);
+            Assert.AreEqual(samples, count.Count);
             Assert.IsTrue(count.Percentages[0] < 0.81);
             Assert.IsTrue(count.Percentages[1] < 0.16);
             Assert.IsTrue(count.Percentages[2] < 0.06);
