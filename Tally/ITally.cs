@@ -8,10 +8,5 @@ namespace Tally
     {
         public TallyDefinition Definition { get; }
         public int BinSelector(T item);
-
-        TallyCount CreateTally(T item);
-        TallyCount CreateTally(IEnumerable<T> items);
-        TallyCount UpdateTally(TallyCount count, T item);
-        TallyCount UpdateTally(TallyCount count, IEnumerable<T> items);
     }
 }

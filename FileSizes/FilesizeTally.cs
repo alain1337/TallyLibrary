@@ -8,43 +8,21 @@ using Tally.Tallies;
 
 namespace FileSizes
 {
-    public class FilesizeTally : TallyBase<FileInfo>, ITally<FileInfo>
+    public class FilesizeTally : HistogramTally<FileInfo, long>
     {
-        public FilesizeTally()
+        public FilesizeTally(string caption = null, bool upperClip = false) 
+            : base(Bins, fi => fi.Length, caption ?? "Filesizes", upperClip: upperClip)
         {
-            Definition = new TallyDefinition("Filesizes", Bins);
         }
 
-        public override int BinSelector(FileInfo item)
+        static readonly HistogramBin<long>[] Bins =
         {
-            return SizeBin.GetBin(item.Length, Bins);
-        }
-
-        static readonly SizeBin[] Bins =
-        {
-            new SizeBin("Tiny", 100),
-            new SizeBin("Small", 1_000),
-            new SizeBin("Big", 1_000_000),
-            new SizeBin("Huge", 0)
+            new HistogramBin<long>(10_000, "Tiny"),
+            new HistogramBin<long>(100_000, "Small"),
+            new HistogramBin<long>(1_000_000, "Medium"),
+            new HistogramBin<long>(16_000_000, "Large"),
+            new HistogramBin<long>(128_000_000, "Huge"),
+            new HistogramBin<long>(0, "Gigantic")
         };
-    }
-
-    internal class SizeBin : TallyBin
-    {
-        readonly long _maxSize;
-        internal SizeBin(string caption, long maxSize) : base(caption)
-        {
-            _maxSize = maxSize;
-        }
-
-        bool IsLess(long size) => size < _maxSize;
-
-        internal static int GetBin(long size, SizeBin[] bins)
-        {
-            for (var i = 0; i < bins.Length - 1; i++)
-                if (bins[i].IsLess(size))
-                    return i;
-            return bins.Length - 1;
-        }
     }
 }
