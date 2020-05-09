@@ -43,6 +43,28 @@ namespace Tally
             Enumerable.Range(0, Counts.Length).Select(i => Counts[i] += c2.Counts[i]).ToList();
         }
 
+        public TallyBinInfo<T> this[string binCaption] 
+        {
+            get
+            {
+                var i = Array.FindIndex(Definition.Bins, b => String.Equals(b.Caption, binCaption));
+                if (i < 0)
+                    throw new IndexOutOfRangeException(nameof(binCaption));
+                return CreateBinInfo(i);
+            }
+        }
+
+        TallyBinInfo<T> CreateBinInfo(int i)
+        {
+            return new TallyBinInfo<T>(i, Definition.Bins[i].Caption, Counts[i], Count);
+        }
+
+        public IEnumerable<TallyBinInfo<T>> GetBinInfos()
+        {
+            for (var i = 0; i < Definition.Bins.Length; i++)
+                yield return CreateBinInfo(i);
+        }
+
         public TallyCount(TallyDefinition<T> definition)
         {
             Definition = definition;
@@ -53,6 +75,24 @@ namespace Tally
         {
             Definition = definition;
             Counts = counts.ToArray();
+        }
+    }
+
+    public class TallyBinInfo<T>
+    {
+        public int Index { get; }
+        public string Caption { get; }
+        public int Count { get; }
+        public int TotalCount { get; }
+
+        public double Percentage => TotalCount > 0 ? (double) Count / TotalCount : 0.0;
+
+        internal TallyBinInfo(int index, string caption, int count, int totalCount)
+        {
+            Index = index;
+            Caption = caption;
+            Count = count;
+            TotalCount = totalCount;
         }
     }
 

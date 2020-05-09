@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -44,19 +45,19 @@ namespace FileSizes
 
         static void Render<T>(TallyCount<T> tally, int? top = null)
         {
-            var indices = Enumerable.Range(0, tally.Counts.Length).ToList();
-            var others = 0;
-            if (top < indices.Count)
+            var bins = tally.GetBinInfos().ToList();
+            int others = 0;
+            if (top < bins.Count)
             {
-                indices = indices.OrderByDescending(i => tally.Counts[i]).ToList();
-                others = indices.Skip(top.Value).Sum(i => tally.Counts[i]);
-                indices = indices.Take(top.Value).ToList();
+                bins = bins.OrderByDescending(b => b.Count).ToList();
+                others = bins.Skip(top.Value).Sum(b => b.Count);
+                bins = bins.Take(top.Value).ToList();
             }
 
             Console.WriteLine(tally.Definition.Caption + (others > 0 ? $" (Top {top})" : ""));
             Console.WriteLine();
-            foreach (var i in indices)
-                Console.WriteLine($"\t{tally.Definition.Bins[i].Caption,-15} {tally.Counts[i],5} [{PercentBar(tally.Percentages[i])}]");
+            foreach (var bin in bins)
+                Console.WriteLine($"\t{bin.Caption,-15} {bin.Count,5} [{PercentBar(bin.Percentage)}]");
             if (others > 0)
                 Console.WriteLine($"\t{$"({tally.Counts.Length - top} other)",-15} {others,5} [{PercentBar((double)others / tally.Count)}]");
             Console.WriteLine($"\t{"TOTAL",-15} {tally.Count,5}");
