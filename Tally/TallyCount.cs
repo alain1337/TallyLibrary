@@ -15,12 +15,19 @@ namespace Tally
         public void Tally(IEnumerable<T> items)
         {
             foreach (var item in items)
-            {
-                var i = Definition.BinSelector(item);
-                if (Counts.Length != Definition.Bins.Length)
-                    Array.Resize(ref Counts, Definition.Bins.Length);
-                Counts[i]++;
-            }
+                Tally(item);
+        }
+
+        public void Tally(T item)
+        {
+            var i = Definition.BinSelector(item);
+            if (i < 0)
+                return;
+            if (i >= Definition.Bins.Length)
+                throw new Exception($"BinSelector() returned invalid value: {i} ({Definition.Bins.Length} bins exist");
+            if (Counts.Length != Definition.Bins.Length)
+                Array.Resize(ref Counts, Definition.Bins.Length);
+            Counts[i]++;
         }
 
         public static TallyCount<T> operator +(TallyCount<T> c1, TallyCount<T> c2)

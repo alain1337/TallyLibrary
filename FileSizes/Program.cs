@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Tally;
@@ -22,8 +23,18 @@ namespace FileSizes
             var extCounts = extensions.CreateCount();
             var backupTodo = new TodoDoneTally<FileInfo>(fi => !fi.Attributes.HasFlag(FileAttributes.Archive), "Backup Status");
             var backupCounts = backupTodo.CreateCount();
+            var allCounts = new[] { sizeCounts, extCounts, backupCounts };
 
-            Do(new[] { sizeCounts, extCounts, backupCounts }, args[0]);
+            var traverser = new DirectoryTraverser();
+            traverser.OnFile += fi =>
+            {
+                foreach (var c in allCounts)
+                    c.Tally(fi);
+            };
+            var tr = traverser.Traverse(args[0]);
+            Console.WriteLine($"Scanned {tr.Directories} directories and {tr.Files} files in {tr.Elapsed} ({tr.Exceptions} exceptions)");
+            Console.WriteLine();
+
             Render(sizeCounts);
             Render(extCounts, 10);
             RenderCompletion(backupCounts);
@@ -65,21 +76,6 @@ namespace FileSizes
             foreach (var line in BigLetters.Render($"{count.Percentages[^1]:P2}"))
                 Console.WriteLine("\t" + line);
             Console.WriteLine();
-        }
-
-        static void Do(TallyCount<FileInfo>[] tallies, string dir)
-        {
-            try
-            {
-                var fis = Directory.GetFiles(dir).Select(name => new FileInfo(name));
-                tallies.Tally(fis);
-                foreach (var subdir in Directory.GetDirectories(dir))
-                    Do(tallies, subdir);
-            }
-            catch
-            {
-                // Just ignore
-            }
         }
     }
 }
