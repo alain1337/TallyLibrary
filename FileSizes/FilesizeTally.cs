@@ -11,7 +11,7 @@ namespace FileSizes
     public class FilesizeTally : HistogramTally<FileInfo, long>
     {
         public FilesizeTally(string caption = null, bool upperClip = false) 
-            : base(Bins, fi => fi.Length, caption ?? "Filesizes", upperClip: upperClip)
+            : base(Bins, fi => fi.Length, caption ?? "File Sizes", upperClip: upperClip)
         {
         }
 

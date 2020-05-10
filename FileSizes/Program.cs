@@ -24,8 +24,10 @@ namespace FileSizes
             var extCounts = extensions.CreateCount();
             var backupTodo = new TodoDoneTally<FileInfo>(fi => !fi.Attributes.HasFlag(FileAttributes.Archive), "Backup Status");
             var backupCounts = backupTodo.CreateCount();
-            var allTallies = new ITally<FileInfo>[] { sizes, extensions, backupTodo };
-            var allCounts = new[] { sizeCounts, extCounts, backupCounts };
+            var ages = new FileageTally();
+            var ageCounts = ages.CreateCount();
+            var allTallies = new ITally<FileInfo>[] { sizes, ages, extensions, backupTodo };
+            var allCounts = new[] { sizeCounts, ageCounts, extCounts, backupCounts };
 
             var traverser = new DirectoryTraverser();
             traverser.OnFile += fi =>
@@ -38,6 +40,7 @@ namespace FileSizes
             Console.WriteLine();
 
             Render(sizeCounts);
+            Render(ageCounts);
             Render(extCounts, 10);
             RenderCompletion(backupCounts);
 

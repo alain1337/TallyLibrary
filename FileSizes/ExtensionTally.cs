@@ -7,7 +7,7 @@ namespace FileSizes
 {
     public class ExtensionTally : ValuesTally<FileInfo,string>
     {
-        public ExtensionTally(string caption = null) : base(null, caption ?? "Extensions")
+        public ExtensionTally(string caption = null) : base(null, caption ?? "File Extensions")
         {
             Definition.AddBin(new TallyBin("(none)"));
         }
