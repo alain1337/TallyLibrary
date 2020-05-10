@@ -18,31 +18,37 @@ namespace FileSizes
                 return 9;
             }
 
-            var sizes = new FilesizeTally();
-            var sizeCounts = sizes.CreateCount();
-            var extensions = new ExtensionTally();
-            var extCounts = extensions.CreateCount();
-            var backupTodo = new TodoDoneTally<FileInfo>(fi => !fi.Attributes.HasFlag(FileAttributes.Archive), "Backup Status");
-            var backupCounts = backupTodo.CreateCount();
-            var ages = new FileageTally();
-            var ageCounts = ages.CreateCount();
-            var allTallies = new ITally<FileInfo>[] { sizes, ages, extensions, backupTodo };
-            var allCounts = new[] { sizeCounts, ageCounts, extCounts, backupCounts };
+            var tallies = new MultiTally<FileInfo>(
+                new FilesizeTally(),
+                new FileageTally(),
+                new ExtensionTally(),
+                new TodoDoneTally<FileInfo>(fi => !fi.Attributes.HasFlag(FileAttributes.Archive), "Backup Status")
+            );
 
             var traverser = new DirectoryTraverser();
             traverser.OnFile += fi =>
             {
-                for (var i = 0; i < allTallies.Length; i++)
-                    allTallies[i].UpdateTally(allCounts[i], fi);
+                tallies.UpdateTally(fi);
             };
             var tr = traverser.Traverse(args[0]);
             Console.WriteLine($"Scanned {tr.Directories} directories and {tr.Files} files in {tr.Elapsed} ({tr.Exceptions} exceptions)");
             Console.WriteLine();
 
-            Render(sizeCounts);
-            Render(ageCounts);
-            Render(extCounts, 10);
-            RenderCompletion(backupCounts);
+            for (var i = 0; i < tallies.Count; i++)
+            {
+                switch (tallies.Tallies[i])
+                {
+                    case ExtensionTally _:
+                        Render(tallies.Counts[i], 10);
+                        break;
+                    case TodoDoneTally<FileInfo> _:
+                        RenderCompletion(tallies.Counts[i]);
+                        break;
+                    default:
+                        Render(tallies.Counts[i]);
+                        break;
+                }
+            }
 
             return 0;
         }
