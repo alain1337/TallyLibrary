@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Tally;
 using Tally.Tallies;
 
@@ -26,10 +27,7 @@ namespace FileSizes
             );
 
             var traverser = new DirectoryTraverser();
-            traverser.OnFile += fi =>
-            {
-                tallies.UpdateTally(fi);
-            };
+            traverser.OnFile += fi => tallies.UpdateTally(fi);
             var tr = traverser.Traverse(args[0]);
             Console.WriteLine($"Scanned {tr.Directories} directories and {tr.Files} files in {tr.Elapsed} ({tr.Exceptions} exceptions)");
             Console.WriteLine();
@@ -67,10 +65,10 @@ namespace FileSizes
             Console.WriteLine(tally.Definition.Caption + (others > 0 ? $" (Top {top})" : ""));
             Console.WriteLine();
             foreach (var bin in bins)
-                Console.WriteLine($"\t{bin.Caption,-15} {bin.Count,5} [{PercentBar(bin.Percentage)}]");
+                Console.WriteLine($"\u001b[32m\t{bin.Caption,-15} {bin.Count,10:N0} [{PercentBar(bin.Percentage)}]\u001b[0m");
             if (others > 0)
-                Console.WriteLine($"\t{$"({tally.Counts.Length - top} other)",-15} {others,5} [{PercentBar((double)others / tally.Count)}]");
-            Console.WriteLine($"\t{"TOTAL",-15} {tally.Count,5}");
+                Console.WriteLine($"\u001b[34m\t{$"({tally.Counts.Length - top} other)",-15} {others,10:N0} [{PercentBar((double)others / tally.Count)}]\u001b[0m");
+            Console.WriteLine($"\u001b[97m\t{"TOTAL",-15} {tally.Count,10:N0}\u001b[0m");
             Console.WriteLine();
         }
 
@@ -85,7 +83,7 @@ namespace FileSizes
             Console.WriteLine(count.Definition.Caption);
             Console.WriteLine();
             foreach (var line in BigLetters.Render($"{count.Percentages[^1]:P2}"))
-                Console.WriteLine("\t" + line);
+                Console.WriteLine("\u001b[33m\t" + line + "\u001b[0m");
             Console.WriteLine();
         }
     }
